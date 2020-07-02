@@ -1,0 +1,12 @@
+module E1TS_PortType {
+import from E1TS_PortTypes all;
+
+type port E1TS_PT message {
+	out E1TS_open;
+	in E1TS_result;
+
+	out E1TS_unitdata;
+	in E1TS_unitdata;
+} with { extension "provider" };
+
+}

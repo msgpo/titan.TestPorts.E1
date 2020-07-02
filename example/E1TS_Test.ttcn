@@ -1,0 +1,42 @@
+module E1TS_Test {
+
+import from E1TS_PortType all;
+import from E1TS_PortTypes all;
+
+type component test_CT {
+	port E1TS_PT E1;
+}
+
+testcase TC_selftest() runs on test_CT {
+	map(self:E1, system:E1);
+	var template (value) E1TS_identity ts_id := ts_E1TS_ID(0,0,2);
+
+	E1.send(ts_E1TS_open(23, ts_id, E1TS_MODE_RAW, "e1d"));
+	E1.receive(tr_E1TS_result(23, 0));
+
+	var integer rx_count := 0, rx_bytes := 0;
+	var E1TS_unitdata rx_ud;
+	timer T := 5.0;
+	T.start;
+	while (true) {
+		alt {
+		[] E1.receive(tr_E1TS_unitdata(ts_id,?)) -> value rx_ud {
+			rx_bytes := rx_bytes + lengthof(rx_ud.data);
+			rx_count := rx_count + 1;
+			repeat;
+			}
+		[] T.timeout {
+			log(rx_count, " messages received, total bytes ", rx_bytes);
+			mtc.stop
+			};
+		}
+	}
+}
+
+control {
+	execute( TC_selftest() );
+}
+
+
+
+}

@@ -1,0 +1,87 @@
+module E1TS_PortTypes {
+
+type record E1TS_identity {
+	integer	interface_nr,
+	integer	line_nr,
+	integer ts_nr
+};
+
+type enumerated E1TS_mode {
+	E1TS_MODE_RAW,
+	E1TS_MODE_HDLCFCS
+};
+
+type record E1TS_open {
+	integer req_hdl,
+	E1TS_identity id,
+	E1TS_mode mode,
+	charstring driver
+};
+
+type record E1TS_close {
+	E1TS_identity id
+};
+
+type record E1TS_result {
+	integer req_hdl,
+	integer status
+};
+
+type record E1TS_unitdata {
+	E1TS_identity id,
+	octetstring data
+};
+
+template (value) E1TS_identity ts_E1TS_ID(template (value) integer if_nr,
+					  template (value) integer li_nr,
+					  template (value) integer ts_nr) := {
+	interface_nr := if_nr,
+	line_nr := li_nr,
+	ts_nr := ts_nr
+}
+
+template (present) E1TS_identity tr_E1TS_ID(template (present) integer if_nr,
+					    template (present) integer li_nr,
+					    template (present) integer ts_nr) := {
+	interface_nr := if_nr,
+	line_nr := li_nr,
+	ts_nr := ts_nr
+}
+
+template (value) E1TS_open ts_E1TS_open(template (value) integer req_hdl,
+				        template (value) E1TS_identity id,
+				        template (value) E1TS_mode mode := E1TS_MODE_RAW,
+				        template (value) charstring driver := "e1d") := {
+	req_hdl := req_hdl,
+	id := id,
+	mode := mode,
+	driver := driver
+}
+
+
+template (value) E1TS_close ts_E1TS_close(template (value) E1TS_identity id) := {
+	id := id
+}
+
+template (present) E1TS_result tr_E1TS_result(template (present) integer req_hdl := ?,
+					      template (present) integer status := ?) := {
+	req_hdl := req_hdl,
+	status := status
+}
+
+template (value) E1TS_unitdata ts_E1TS_unitdata(template (value) E1TS_identity id,
+						template (value) octetstring data) := {
+	id := id,
+	data := data
+}
+
+template (present) E1TS_unitdata tr_E1TS_unitdata(template (present) E1TS_identity id,
+						  template (present) octetstring data) := {
+	id := id,
+	data := data
+}
+
+
+
+
+}
